@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.1.1
+Version: 2.1.2
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -17,6 +17,9 @@ add_action('admin_menu', array('AdWidget_Core', 'registerAdmin'));
  */
 class AdWidget_Core
 {
+    CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
+    CONST VERSION = '2.1.2';
+    
     /**
      * The callback used to register the scripts
      */
@@ -46,7 +49,7 @@ class AdWidget_Core
      */
     public static function getBaseURL()
     {   
-        return (get_bloginfo('url') . '/wp-content/plugins/adwidget/');
+        return (get_bloginfo('url') . '/wp-content/plugins/ad-widget/');
     }
     
     /**
@@ -62,7 +65,90 @@ class AdWidget_Core
      */
     static function adminMenuCallback()
     {
+        self::sendInstallReportIfNew();
         include dirname(__FILE__) . '/views/admin.php';
+    }
+    
+    /**
+     * Makes a call to the Broadstreet service to collect information information
+     *  on the blog in case of errors and other needs.
+     */
+    public static function sendReport($message = 'General')
+    {
+        
+        $report = "$message\n";
+        $report .= get_bloginfo('name'). "\n";
+        $report .= get_bloginfo('url'). "\n";
+        $report .= get_bloginfo('admin_email'). "\n";
+        $report .= 'WP Version: ' . get_bloginfo('version'). "\n";
+        $report .= 'Plugin Version: ' . self::VERSION . "\n";
+        $report .= "$message\n";
+
+        @wp_mail('plugin@broadstreetads.com', "Report: $message", $report);
+    }
+
+    /**
+     * If this is a new installation and we've never sent a report to the
+     * Broadstreet server, send a packet of basic info about this blog in case
+     * issues should arise in the future.
+     */
+    public static function sendInstallReportIfNew()
+    {
+        $install_key = self::KEY_INSTALL_REPORT;
+        $upgrade_key = self::KEY_INSTALL_REPORT .'_'. self::VERSION;
+        
+        $installed = self::getOption($install_key);
+        $upgraded  = self::getOption($upgrade_key);
+ 
+        $sent = ($installed && $upgraded);
+        
+        if($sent === FALSE)
+        {
+            if(!$installed)
+            {
+                self::sendReport("Installation");
+                self::setOption($install_key, 'true');
+                self::setOption($upgrade_key, 'true');
+            }
+            else
+            {
+                self::flushRewrites(true);
+                self::sendReport("Upgrade");
+                self::setOption($upgrade_key, 'true');
+            }
+        }
+    }
+    
+    /**
+     * Sets a Wordpress option
+     * @param string $name The name of the option to set
+     * @param string $value The value of the option to set
+     */
+    public static function setOption($name, $value)
+    {
+        if (get_option($name) !== FALSE)
+        {
+            update_option($name, $value);
+        }
+        else
+        {
+            $deprecated = ' ';
+            $autoload   = 'no';
+            add_option($name, $value, $deprecated, $autoload);
+        }
+    }
+
+    /**
+     * Gets a Wordpress option
+     * @param string    $name The name of the option
+     * @param mixed     $default The default value to return if one doesn't exist
+     * @return string   The value if the option does exist
+     */
+    public static function getOption($name, $default = FALSE)
+    {
+        $value = get_option($name);
+        if( $value !== FALSE ) return $value;
+        return $default;
     }
 }
 

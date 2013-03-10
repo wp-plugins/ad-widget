@@ -1,4 +1,12 @@
 <div style="width: 650px;">
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=313569238757581";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<script>window.admin_email = '<?php bloginfo('admin_email'); ?>';</script>
 
 <h1>Wordpress Ad Widget</h1>
 
@@ -22,6 +30,12 @@ company for independent publishers.</p>
 Drag one of those into your a widget area, like a sidebar, and follow the
 instructions! Send questions to kenny@broadstreetads.com .
 </p>
+
+<div>
+    <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
+    <a href="https://twitter.com/broadstreetads" class="twitter-follow-button" data-show-count="false">Follow @broadstreetads</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    
+</div>
 
 <p>
 Here's a short instructional video if you need help:
