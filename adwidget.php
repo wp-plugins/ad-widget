@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.1.3
+Version: 2.1.4
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -18,7 +18,7 @@ add_action('admin_menu', array('AdWidget_Core', 'registerAdmin'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.1.3';
+    CONST VERSION = '2.1.4';
     
     /**
      * The callback used to register the scripts
@@ -241,12 +241,24 @@ class AdWidget_ImageWidget extends WP_Widget
      {
         extract($args);
          
-        $link  = $instance['w_link'];
-        $img   = $instance['w_img'];
+        $link   = @$instance['w_link'];
+        $img    = @$instance['w_img'];
+        $resize = @$instance['w_resize'];
+        
+        if($resize == 'yes')
+        {
+            $resize = "style='width: 100%;'";
+        }
         
         echo $before_widget;
+        
+        if(!$img)
+        {
+            $img  = AdWidget_Core::getBaseURL() . 'assets/sample-ad.png';
+            $link = 'http://adsofthefuture.com';
+        }
             
-        echo "<a target='_blank' href='$link' alt='Ad'><img style='width: 100%' src='$img' alt='Ad' /></a>";
+        echo "<a target='_blank' href='$link' alt='Ad'><img $resize src='$img' alt='Ad' /></a>";
 
         echo $after_widget;
      }
@@ -261,8 +273,9 @@ class AdWidget_ImageWidget extends WP_Widget
      {
         $instance = $old_instance;
 
-        $instance['w_link'] = $new_instance['w_link'];
-        $instance['w_img']  = $new_instance['w_img'];
+        $instance['w_link']    = $new_instance['w_link'];
+        $instance['w_img']     = $new_instance['w_img'];
+        $instance['w_resize']  = $new_instance['w_resize'];
 
         return $instance;
      }
@@ -275,9 +288,8 @@ class AdWidget_ImageWidget extends WP_Widget
      {
         $link_id = $this->get_field_id('w_link');
         $img_id = $this->get_field_id('w_img');
-
         
-        $defaults = array('w_link' => get_bloginfo('url'), 'w_img' => '');
+        $defaults = array('w_link' => get_bloginfo('url'), 'w_img' => '', 'w_resize' => 'no');
         
 		$instance = wp_parse_args((array) $instance, $defaults);
         
@@ -301,6 +313,10 @@ class AdWidget_ImageWidget extends WP_Widget
             <label for="<?php echo $this->get_field_id('w_link'); ?>">Ad Click Destination:</label><br/>
             <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_link'); ?>" name="<?php echo $this->get_field_name('w_link'); ?>" value="<?php echo $instance['w_link']; ?>" />
         </p>
+       <p>
+           <label for="<?php echo $this->get_field_id('w_resize'); ?>">Auto Resize to Max Width? </label>
+           <input type="checkbox" name="<?php echo $this->get_field_name('w_resize'); ?>" value="yes"  <?php if($instance['w_resize'] == 'yes') echo 'checked'; ?> />
+       </p>
         <p>
             When you're ready for a more powerful adserver, visit <a target="_blank" href="http://broadstreetads.com/ad-platform/adserving/">Broadstreet</a>.
         </p>
