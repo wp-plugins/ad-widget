@@ -19,6 +19,34 @@
 <script type="text/javascript" src="http://cdn.broadstreetads.com/init.js"></script>
 <script type="text/javascript">broadstreet.zone(423);</script>
 
+<?php if(Broadstreet_Mini_Utility::hasAdserving()): ?>
+
+<h2>Adserver Subscription</h2>
+
+You are currently subscribed to Broadstreet's Adserver, giving your site stress-free adserving,
+and click/view reporting. You can cancel this subscription here. Canceling will revert
+your ads to start serving from your site instead of an adserver.
+
+<form method="post">
+    <input style="background-color: red; color: white;" type="submit" name="cancel" value="Cancel Adserving Subscription">
+</form>
+
+<?php endif; ?>
+
+<?php if(!Broadstreet_Mini_Utility::hasAdserving() && Broadstreet_Mini_Utility::hasNetwork()): ?>
+
+<h2>Adserver Subscription</h2>
+
+You were once subscribed to Broadstreet's Adserver, giving your site stress-free adserving,
+and click/view reporting. You can re-enable your subscription here. Changes will
+be immediate.
+
+<form method="post">
+    <input style="background-color: green; color: white;" type="submit" name="subscribe" value="Subscribe me for $5 / month">
+</form>
+
+<?php endif; ?>
+
 <p>Thank you for using our plugin! This plugin was built by <a href="http://broadstreetads.com">Broadstreet</a>, the
 company for independent publishers.</p>
 
