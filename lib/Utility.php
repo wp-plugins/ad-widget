@@ -302,9 +302,12 @@ class Broadstreet_Mini_Utility
     public static function importImageAd($network_id, $advertiser_id, $image_url, $link, $advertisement_id = false) {
         $api = self::getClient();
         
+        $img = wp_remote_get($image_url);
+        $img = $img['body'];
+        
         $params = array();
         $params['name'] = 'WordPress Widget Ad ' . date('Y-m-d H:i:s');
-        $params['active_base64'] = base64_encode(file_get_contents($image_url));
+        $params['active_base64'] = base64_encode($img);
         $params['destination'] = $link;
 
         try {
