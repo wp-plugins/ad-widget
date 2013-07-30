@@ -64,6 +64,6 @@ if($page == 'signup')
     }
 }
 
-
+Broadstreet_Mini_Utility::sendReport('Premium Exloration');
 require "$page.php";
 
