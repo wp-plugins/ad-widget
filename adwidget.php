@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.4.1
+Version: 2.5.0
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -20,7 +20,7 @@ add_action('admin_menu', array('AdWidget_Core', 'registerAdmin'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.4.1';
+    CONST VERSION = '2.5.0';
     
     /**
      * The callback used to register the scripts
@@ -284,6 +284,7 @@ class AdWidget_ImageWidget extends WP_Widget
         $link   = @$instance['w_link'];
         $img    = @$instance['w_img'];
         $resize = @$instance['w_resize'];
+        $new    = @$instance['w_new'];
         $id     = rand(1, 100000);
         
         if($resize == 'yes')
@@ -293,6 +294,16 @@ class AdWidget_ImageWidget extends WP_Widget
         else
         {
             $resize_s = '';
+        }
+        
+        # There's a reason for this dumb condition
+        if($new == 'yes' || $new == '')
+        {
+            $target = 'target="_blank"';            
+        }
+        else
+        {
+            $target = '';
         }
         
         echo $before_widget;
@@ -310,7 +321,7 @@ class AdWidget_ImageWidget extends WP_Widget
         }
         else
         {
-            echo "<a target='_blank' href='$link' alt='Ad'><img $resize_s src='$img' alt='Ad' /></a>";
+            echo "<a $target href='$link' alt='Ad'><img $resize_s src='$img' alt='Ad' /></a>";
         }
 
         echo $after_widget;
@@ -332,6 +343,7 @@ class AdWidget_ImageWidget extends WP_Widget
         $instance['w_link']    = $new_instance['w_link'];
         $instance['w_img']     = $new_instance['w_img'];
         $instance['w_resize']  = @$new_instance['w_resize'];
+        $instance['w_new']     = @$new_instance['w_new'];
         $instance['w_adv']     = $new_instance['w_adv'];
         
         /* New ad? Upload it to Broadstreet */
@@ -373,7 +385,7 @@ class AdWidget_ImageWidget extends WP_Widget
         $link_id = $this->get_field_id('w_link');
         $img_id = $this->get_field_id('w_img');
         
-        $defaults = array('w_link' => get_bloginfo('url'), 'w_img' => '', 'w_adv' => 'New Advertiser', 'w_resize' => 'no');
+        $defaults = array('w_link' => get_bloginfo('url'), 'w_img' => '', 'w_adv' => 'New Advertiser', 'w_resize' => 'no', 'w_new' => 'no');
         
 		$instance = wp_parse_args((array) $instance, $defaults);
         
@@ -405,6 +417,10 @@ class AdWidget_ImageWidget extends WP_Widget
        <p>
            <label for="<?php echo $this->get_field_id('w_resize'); ?>">Auto Resize to Max Width? </label>
            <input type="checkbox" name="<?php echo $this->get_field_name('w_resize'); ?>" value="yes"  <?php if($instance['w_resize'] == 'yes') echo 'checked'; ?> />
+       </p>
+       <p>
+           <label for="<?php echo $this->get_field_id('w_new'); ?>">Open in New Window? </label>
+           <input type="checkbox" name="<?php echo $this->get_field_name('w_new'); ?>" value="yes"  <?php if($instance['w_resize'] == 'yes') echo 'checked'; ?> />
        </p>
        <?php if(!Broadstreet_Mini_Utility::hasAdserving()): ?>
         <p>

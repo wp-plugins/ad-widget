@@ -5,16 +5,16 @@
         <div id="clients-section">
             <table id="clients">
                 <tr>
-                    <td><a href="http://baristanet.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/baristanet.png" /></a></td>
-                    <td><a href="http://thebatavian.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/batavian.png" /></a></td>
-                    <td><a href="http://arlnow.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/arlingtonnow.png" /></a></td>
-                    <td><a href="http://hulafrog.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/hulafrog.png" /></a></td>
+                    <td><a href="http://baristanet.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/baristanet.png" /></a></td>
+                    <td><a href="http://thebatavian.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/batavian.png" /></a></td>
+                    <td><a href="http://arlnow.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/arlingtonnow.png" /></a></td>
+                    <td><a href="http://hulafrog.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/hulafrog.png" /></a></td>
                 </tr>
                 <tr>
-                    <td><a href="http://natomasbuzz.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/natomas.png" /></a></td>
-                    <td><a href="http://www.sheepsheadbites.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/sheepshead.png" /></a></td>
-                    <td><a href="http://www.pvpost.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/pvpost.png" /></a></td>
-                    <td><a href="http://njnewscommons.com/"><img src="http://broadstreetads.com/assets/images/featured-clients/njnewscommons.png" /></a></td>
+                    <td><a href="http://natomasbuzz.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/natomas.png" /></a></td>
+                    <td><a href="http://www.sheepsheadbites.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/sheepshead.png" /></a></td>
+                    <td><a href="http://www.pvpost.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/pvpost.png" /></a></td>
+                    <td><a href="http://njnewscommons.com/"><img src="http://broadstreetads.com/assets/app/images/featured-clients/njnewscommons.png" /></a></td>
                 </tr>
             </table>
         </div>
