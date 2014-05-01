@@ -19,7 +19,7 @@
 <script type="text/javascript" src="http://cdn.broadstreetads.com/init.js"></script>
 <script type="text/javascript">broadstreet.zone(423);</script>
 
-<?php if(Broadstreet_Mini_Utility::hasAdserving()): ?>
+<?php if(Broadstreet_Adwidget_Mini_Utility::hasAdserving()): ?>
 
 <h2>Adserver Subscription</h2>
 
@@ -33,7 +33,7 @@ your ads to start serving from your site instead of an adserver.
 
 <?php endif; ?>
 
-<?php if(!Broadstreet_Mini_Utility::hasAdserving() && Broadstreet_Mini_Utility::hasNetwork()): ?>
+<?php if(!Broadstreet_Adwidget_Mini_Utility::hasAdserving() && Broadstreet_Adwidget_Mini_Utility::hasNetwork()): ?>
 
 <h2>Adserver Subscription</h2>
 

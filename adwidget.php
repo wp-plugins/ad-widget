@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.5.0
+Version: 2.5.1
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -20,7 +20,7 @@ add_action('admin_menu', array('AdWidget_Core', 'registerAdmin'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.5.0';
+    CONST VERSION = '2.5.1';
     
     /**
      * The callback used to register the scripts
@@ -70,10 +70,10 @@ class AdWidget_Core
         self::sendInstallReportIfNew();
         
         if(isset($_POST['cancel']))
-            Broadstreet_Mini_Utility::hasAdserving(false);
+            Broadstreet_Adwidget_Mini_Utility::hasAdserving(false);
         
         if(isset($_POST['subscribe']))
-            Broadstreet_Mini_Utility::hasAdserving(true);
+            Broadstreet_Adwidget_Mini_Utility::hasAdserving(true);
         
         include dirname(__FILE__) . '/views/admin.php';
     }
@@ -205,7 +205,7 @@ class AdWidget_HTMLWidget extends WP_Widget
         $instance['w_adv']    = $new_instance['w_adv'];
         
         /* New ad? Upload it to Broadstreet */
-        if($instance['w_adcode'] && Broadstreet_Mini_Utility::hasAdserving()) {
+        if($instance['w_adcode'] && Broadstreet_Adwidget_Mini_Utility::hasAdserving()) {
             
             $advertisement_id = false;
             # New ad?
@@ -213,12 +213,12 @@ class AdWidget_HTMLWidget extends WP_Widget
             
             # New advertiser?
             if(!$advertisement_id) {
-                $api = Broadstreet_Mini_Utility::getClient();
-                $adv = $api->createAdvertiser(Broadstreet_Mini_Utility::getNetworkID(), $instance['w_adv']);
+                $api = Broadstreet_Adwidget_Mini_Utility::getClient();
+                $adv = $api->createAdvertiser(Broadstreet_Adwidget_Mini_Utility::getNetworkID(), $instance['w_adv']);
                 $instance['bs_adv_id'] = $adv->id;
             }
                 
-            $ad = Broadstreet_Mini_Utility::importHTMLAd(Broadstreet_Mini_Utility::getNetworkID(), 
+            $ad = Broadstreet_Adwidget_Mini_Utility::importHTMLAd(Broadstreet_Adwidget_Mini_Utility::getNetworkID(), 
                     $instance['bs_adv_id'], 
                     $instance['w_adcode'],
                     $advertisement_id);
@@ -314,7 +314,7 @@ class AdWidget_ImageWidget extends WP_Widget
             $link = 'http://adsofthefuture.com';
         }
         
-        if(Broadstreet_Mini_Utility::hasAdserving() && is_numeric($instance['bs_ad_id']))
+        if(Broadstreet_Adwidget_Mini_Utility::hasAdserving() && is_numeric($instance['bs_ad_id']))
         {
             if($resize == 'yes') echo '<style type="text/css">.adwidget-id'.$id.' img { width: 100% !important; height: auto !important; }</style>';
             echo "<span class='adwidget-id$id'>{$instance['bs_ad_html']}</span>";
@@ -347,7 +347,7 @@ class AdWidget_ImageWidget extends WP_Widget
         $instance['w_adv']     = $new_instance['w_adv'];
         
         /* New ad? Upload it to Broadstreet */
-        if($instance['w_img'] && $changed && Broadstreet_Mini_Utility::hasAdserving()) {
+        if($instance['w_img'] && $changed && Broadstreet_Adwidget_Mini_Utility::hasAdserving()) {
             
             $advertisement_id = false;
             # New ad?
@@ -355,12 +355,12 @@ class AdWidget_ImageWidget extends WP_Widget
             
             # New advertiser?
             if(!$advertisement_id) {
-                $api = Broadstreet_Mini_Utility::getClient();
-                $adv = $api->createAdvertiser(Broadstreet_Mini_Utility::getNetworkID(), $instance['w_adv']);
+                $api = Broadstreet_Adwidget_Mini_Utility::getClient();
+                $adv = $api->createAdvertiser(Broadstreet_Adwidget_Mini_Utility::getNetworkID(), $instance['w_adv']);
                 $instance['bs_adv_id'] = $adv->id;
             }
                 
-            $ad = Broadstreet_Mini_Utility::importImageAd(Broadstreet_Mini_Utility::getNetworkID(), 
+            $ad = Broadstreet_Adwidget_Mini_Utility::importImageAd(Broadstreet_Adwidget_Mini_Utility::getNetworkID(), 
                     $instance['bs_adv_id'], 
                     $instance['w_img'], 
                     $instance['w_link'],
@@ -422,7 +422,7 @@ class AdWidget_ImageWidget extends WP_Widget
            <label for="<?php echo $this->get_field_id('w_new'); ?>">Open in New Window? </label>
            <input type="checkbox" name="<?php echo $this->get_field_name('w_new'); ?>" value="yes"  <?php if($instance['w_resize'] == 'yes') echo 'checked'; ?> />
        </p>
-       <?php if(!Broadstreet_Mini_Utility::hasAdserving()): ?>
+       <?php if(!Broadstreet_Adwidget_Mini_Utility::hasAdserving()): ?>
         <p>
             <span style="color: green; font-weight: bold;">New!</span> When you're ready for a more powerful adserver with click reporting <a target="_blank" href="#" onclick="broadstreet_upgrade(); return false;">click here</a>.
             <script language="javascript">
@@ -435,7 +435,7 @@ class AdWidget_ImageWidget extends WP_Widget
                             alert('Save any unsaved widgets and refresh this page to see new upgraded options');
                         };
 
-                        tb_show('Broadstreet', '<?php echo bs_get_base_url('views/modal/') ?>' + '?fake=fake&width=650&height=580&TB_iframe=true');
+                        tb_show('Broadstreet', '<?php echo bsadwidget_get_base_url('views/modal/') ?>' + '?fake=fake&width=650&height=580&TB_iframe=true');
                     }
                 }
             </script>
@@ -452,7 +452,7 @@ class AdWidget_ImageWidget extends WP_Widget
                             tb_remove();
                         };
 
-                        tb_show('Broadstreet', '<?php echo bs_get_base_url('views/modal/?step=reports&adv_id=' . @$instance['bs_adv_id'] . '&ad_id=' . @$instance['bs_ad_id']) ?>' + '&width=650&height=580&TB_iframe=true');
+                        tb_show('Broadstreet', '<?php echo bsadwidget_get_base_url('views/modal/?step=reports&adv_id=' . @$instance['bs_adv_id'] . '&ad_id=' . @$instance['bs_ad_id']) ?>' + '&width=650&height=580&TB_iframe=true');
                     }
                 }
             </script>

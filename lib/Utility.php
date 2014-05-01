@@ -4,14 +4,14 @@ require 'Broadstreet.php';
 
 if(!class_exists('Broadstreet_Mini_Utility')):
 
-function bs_get_option($name, $default = FALSE)
+function bsadwidget_get_option($name, $default = FALSE)
 {
     $value = get_option($name);
     if( $value !== FALSE ) return $value;
     return $default;
 }
 
-function bs_set_option($name, $value)
+function bsadwidget_set_option($name, $value)
 {
     if (get_option($name) !== FALSE)
     {
@@ -25,40 +25,40 @@ function bs_set_option($name, $value)
     }
 }
 
-function bs_get_base_url($append = false)
+function bsadwidget_get_base_url($append = false)
 {
     $dir = basename(dirname(__FILE__));
     return (WP_PLUGIN_URL . "/ad-widget/" . ($append ? $append : ''));
 }
 
-function bs_get_email()
+function bsadwidget_get_email()
 {
     return get_bloginfo('admin_email');
 }
 
-function bs_get_website()
+function bsadwidget_get_website()
 {
     return get_bloginfo('url');
 }
 
-function bs_get_website_name()
+function bsadwidget_get_website_name()
 {
     return get_bloginfo('url');
 }
 
-function bs_get_platform_version()
+function bsadwidget_get_platform_version()
 {
     return get_bloginfo('version');
 }
 
 
-function bs_mail($to, $subject, $body)
+function bsadwidget_mail($to, $subject, $body)
 {
     @wp_mail($to, $subject, $body);
 }
 
 
-class Broadstreet_Mini_Utility
+class Broadstreet_Adwidget_Mini_Utility
 {
     CONST KEY_ADSERVER_ENABLED = 'Broadstreet_Adserver_Enabled';
     CONST KEY_API_KEY       = 'Broadstreet_API_Key';
@@ -73,7 +73,7 @@ class Broadstreet_Mini_Utility
      */
     public static function getBaseURL($append = false)
     {
-        return bs_get_base_url($append);
+        return bsadwidget_get_base_url($append);
     }
     
     /**
@@ -83,7 +83,7 @@ class Broadstreet_Mini_Utility
      */
     public static function setOption($name, $value)
     {  
-        return bs_set_option($name, $value);
+        return bsadwidget_set_option($name, $value);
     }    
 
     /**
@@ -94,7 +94,7 @@ class Broadstreet_Mini_Utility
      */
     public static function getOption($name, $default = FALSE)
     {
-        return bs_get_option($name, $default);
+        return bsadwidget_get_option($name, $default);
     }
     
     /**
@@ -103,13 +103,13 @@ class Broadstreet_Mini_Utility
     public static function sendReport($message = 'General')
     {
         $report = "";
-        $report .= bs_get_website_name(). "\n";
-        $report .= bs_get_website(). "\n";
-        $report .= bs_get_email(). "\n";
-        $report .= 'Platform Version: ' . bs_get_platform_version() . "\n";
+        $report .= bsadwidget_get_website_name(). "\n";
+        $report .= bsadwidget_get_website(). "\n";
+        $report .= bsadwidget_get_email(). "\n";
+        $report .= 'Platform Version: ' . bsadwidget_get_platform_version() . "\n";
         $report .= "$message\n";
 
-        @bs_mail('errors@broadstreetads.com', "Status Report: WP AdWidget", $report);
+        @bsadwidget_mail('errors@broadstreetads.com', "Status Report: WP AdWidget", $report);
     }
     
     /**
@@ -178,7 +178,7 @@ class Broadstreet_Mini_Utility
     {
         $success = false;
         if($enabled !== null) {
-            self::setOption (Broadstreet_Mini_Utility::KEY_ADSERVER_ENABLED, (bool)$enabled);
+            self::setOption (Broadstreet_Adwidget_Mini_Utility::KEY_ADSERVER_ENABLED, (bool)$enabled);
             $message = $enabled ? 'Subscribed' : 'Unsubscribed';
             if($enabled) $success = self::importOldAds($email);
             if($success) self::sendReport("Premium Adserver $message");
@@ -262,7 +262,7 @@ class Broadstreet_Mini_Utility
     public static function editableLink($label_or_markup = false, $key = 'solo')
     {
         if(!$label_or_markup)
-            $label_or_markup = '<img alt="Create Editable" src="'.Broadstreet_Mini_Utility::getBaseURL('/assets/img/editable-button.png').'" />';
+            $label_or_markup = '<img alt="Create Editable" src="'.Broadstreet_Adwidget_Mini_Utility::getBaseURL('/assets/img/editable-button.png').'" />';
         echo '<a href="#" onclick="editable_'.$key.'(); return false;">'.$label_or_markup.'</a>';
     }
     
@@ -358,25 +358,25 @@ class Broadstreet_Mini_Utility
         
         try
         {
-            if(!Broadstreet_Mini_Utility::hasNetwork()) 
+            if(!Broadstreet_Adwidget_Mini_Utility::hasNetwork()) 
             {
                 # Register the user by email address
                 $user = $api->register($email);
-                Broadstreet_Mini_Utility::setOption(Broadstreet_Mini_Utility::KEY_API_KEY, $user->access_token);
+                Broadstreet_Adwidget_Mini_Utility::setOption(Broadstreet_Adwidget_Mini_Utility::KEY_API_KEY, $user->access_token);
 
                 # Create a network for the new user
                 # Don't change this unless you want a higher tier. There's no lower tier, you haxor you
                 $net = $api->createNetwork('Wordpress - ' . get_bloginfo('name'), array('tier_id' => 4));
-                Broadstreet_Mini_Utility::setOption(Broadstreet_Mini_Utility::KEY_NETWORK_ID, $net->id);
+                Broadstreet_Adwidget_Mini_Utility::setOption(Broadstreet_Adwidget_Mini_Utility::KEY_NETWORK_ID, $net->id);
             }
             else
             {
                 $api = self::getClient();
-                $net = (object)array('id' => Broadstreet_Mini_Utility::getNetworkID());
+                $net = (object)array('id' => Broadstreet_Adwidget_Mini_Utility::getNetworkID());
             }
             
             /* Import Image widgets */
-            $ads = Broadstreet_Mini_Utility::getOption('widget_adwidget_imagewidget');
+            $ads = Broadstreet_Adwidget_Mini_Utility::getOption('widget_adwidget_imagewidget');
             
             foreach($ads as $id => $data) 
             {
@@ -384,7 +384,7 @@ class Broadstreet_Mini_Utility
                 if(!is_numeric($id) || is_numeric(@$data['bs_ad_id'])) continue;
                 
                 $adv = $api->createAdvertiser($net->id, self::arrayGet($data, 'w_adv', 'New Advertiser - Image'));
-                Broadstreet_Mini_Utility::setOption(Broadstreet_Mini_Utility::KEY_ADVERTISER_ID, $adv->id);
+                Broadstreet_Adwidget_Mini_Utility::setOption(Broadstreet_Adwidget_Mini_Utility::KEY_ADVERTISER_ID, $adv->id);
              
                 $ad = self::importImageAd($net->id, $adv->id, $data['w_img'], $data['w_link']);
                 
@@ -395,11 +395,11 @@ class Broadstreet_Mini_Utility
                 $ads[$id]['bs_adv_id']  = $adv->id;
             }
             
-            Broadstreet_Mini_Utility::setOption('widget_adwidget_imagewidget', $ads);
+            Broadstreet_Adwidget_Mini_Utility::setOption('widget_adwidget_imagewidget', $ads);
             
             
             /* Import HTML widgets */
-            $ads = Broadstreet_Mini_Utility::getOption('widget_adwidget_htmlwidget');
+            $ads = Broadstreet_Adwidget_Mini_Utility::getOption('widget_adwidget_htmlwidget');
             
             foreach($ads as $id => $data) 
             {
@@ -407,7 +407,7 @@ class Broadstreet_Mini_Utility
                 if(!is_numeric($id) || is_numeric(@$data['bs_ad_id'])) continue;
                 
                 $adv = $api->createAdvertiser($net->id, self::arrayGet($data, 'w_adv', 'New Advertiser - HTML'));
-                Broadstreet_Mini_Utility::setOption(Broadstreet_Mini_Utility::KEY_ADVERTISER_ID, $adv->id);
+                Broadstreet_Adwidget_Mini_Utility::setOption(Broadstreet_Adwidget_Mini_Utility::KEY_ADVERTISER_ID, $adv->id);
              
                 $ad = self::importHTMLAd($net->id, $adv->id, $data['w_adcode']);
                 
@@ -418,7 +418,7 @@ class Broadstreet_Mini_Utility
                 $ads[$id]['bs_adv_id']  = $adv->id;
             }
             
-            Broadstreet_Mini_Utility::setOption('widget_adwidget_htmlwidget', $ads);
+            Broadstreet_Adwidget_Mini_Utility::setOption('widget_adwidget_htmlwidget', $ads);
         }
         catch(Exception $ex)
         {

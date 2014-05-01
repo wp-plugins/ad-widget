@@ -20,7 +20,7 @@
         </div>
         <div id="call-to-action">
             <form id="signup" action="?step=signup&status=agree" method="post">
-                <?php if(!Broadstreet_Mini_Utility::getNetworkID()): ?>
+                <?php if(!Broadstreet_Adwidget_Mini_Utility::getNetworkID()): ?>
                 <input id="email" type="text" name="email" placeholder="your@email.com" value="<?php echo get_bloginfo('admin_email') ?>" />
                 <a href="#" onclick="$('#signup').submit();" class="btn call-to-action">$5 / month. Click for an Instant Signup</a>
                 <?php else: ?>

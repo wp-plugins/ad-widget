@@ -105,6 +105,18 @@ class Broadstreet
     }
     
     /**
+     * Create a zone
+     * @param string $id The id of the network
+     * @param string $name The name of the zone
+     * @param string $options
+     */
+    public function createZone($network_id, $name, $options = array())
+    {
+        $options['name'] = $name;
+        return $this->_post("/networks/$network_id/zones", $options)->body->zone;        
+    }
+    
+    /**
      * Create a basic user
      * @param string $email 
      */
@@ -170,6 +182,15 @@ class Broadstreet
     public function getNetwork($network_id)
     {
         return $this->_get("/networks/$network_id")->body->network;
+    }
+    
+    /**
+     * Get all zones for a network
+     * @param int $network_id 
+     */
+    public function getZones($network_id)
+    {
+        return $this->_get("/networks/$network_id/zones")->body->zones;
     }
     
     /**
@@ -352,14 +373,18 @@ class Broadstreet
         $status   = false;
         $response = @wp_remote_post($url, $params);
         
-        if(isset($response['response'])
+        if($response instanceof WP_Error)
+        {
+            $body   = print_r($response->errors, true);
+            $status = 500;
+        } elseif(isset($response['response'])
                 && isset($response['body'])
                 && isset($response['response']['code']))
         {
             $body   = $response['body'];
             $status = (string)$response['response']['code'];
         }
-        
+
         return array($body, $status);
     }
     
@@ -426,7 +451,7 @@ class Broadstreet
     {
         $uri      = ltrim($uri, '/');
 
-        return ($this->use_ssl ? 'http://' : 'http://')
+        return ($this->use_ssl ? 'https://' : 'http://')
                 . $this->host
                 . '/api/'
                 . self::API_VERSION

@@ -2,7 +2,7 @@
 
 $ad_id  = $_GET['ad_id'];
 $adv_id = $_GET['adv_id'];
-$net_id = Broadstreet_Mini_Utility::getNetworkID();
+$net_id = Broadstreet_Adwidget_Mini_Utility::getNetworkID();
 
 $start  = @$_GET['start'];
 $end    = @$_GET['end'];
@@ -13,7 +13,7 @@ if($start && !$end)   $end = date('Y-m-d');
 if($end   && !$start) $start = date('Y-m-d', strtotime($end) - $day);
 if(!$start && !$end)  { $end = date('Y-m-d'); $start = date('Y-m-d', time() - $day); }
 
-$api   = Broadstreet_Mini_Utility::getClient();
+$api   = Broadstreet_Adwidget_Mini_Utility::getClient();
 $error = false;
 $stats = array();
 
