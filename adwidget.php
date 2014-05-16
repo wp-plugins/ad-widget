@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.5.1
+Version: 2.6.0
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -20,7 +20,8 @@ add_action('admin_menu', array('AdWidget_Core', 'registerAdmin'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.5.1';
+    CONST VERSION = '2.6.0';
+    CONST KEY_WELCOME = 'AdWidget_Welcome';
     
     /**
      * The callback used to register the scripts
@@ -83,8 +84,7 @@ class AdWidget_Core
      *  on the blog in case of errors and other needs.
      */
     public static function sendReport($message = 'General')
-    {
-        
+    {        
         $report = "$message\n";
         $report .= get_bloginfo('name'). "\n";
         $report .= get_bloginfo('url'). "\n";
@@ -95,6 +95,30 @@ class AdWidget_Core
 
         @wp_mail('plugin@broadstreetads.com', "Report: $message", $report);
     }
+    
+    /**
+     * Send a welcome email to the user
+     */
+    public static function sendWelcome()
+    {
+        $got_welcome = self::getOption(self::KEY_WELCOME);
+        
+        if($got_welcome != 'true') {
+            $email   = get_bloginfo('admin_email');
+            $subject = "Message from WP AdWidget";
+
+            $body = "Thank you for using WP AdWidget! If you have any questions, reach out to kenny@broadstreetads.com.\n\n"
+                    . "*One Other Thing*\n\nYou might also be interested in Selfie: http://wordpress.org/plugins/selfie :)\n\n"
+                    . "It's self serve advertising that you can implement in a couple minutes.\n\n"
+                    . "Best of luck!\n"
+                    . "- Kenny Katzgrau\n\n"
+                    . '"Our readers are perhaps our greatest untapped resource" - New York Times Innovation Report';
+
+            self::setOption(self::KEY_WELCOME, 'true');
+            
+            @wp_mail($email, $subject, $body);
+        }
+    }
 
     /**
      * If this is a new installation and we've never sent a report to the
@@ -102,25 +126,27 @@ class AdWidget_Core
      * issues should arise in the future.
      */
     public static function sendInstallReportIfNew()
-    {
+    {        
         $install_key = self::KEY_INSTALL_REPORT;
         $upgrade_key = self::KEY_INSTALL_REPORT .'_'. self::VERSION;
         
         $installed = self::getOption($install_key);
         $upgraded  = self::getOption($upgrade_key);
  
-        $sent = ($installed && $upgraded);
+        $sent = ($installed && $upgraded);        
         
         if($sent === FALSE)
-        {
+        {            
             if(!$installed)
             {
+                self::sendWelcome();
                 self::sendReport("Installation");
                 self::setOption($install_key, 'true');
                 self::setOption($upgrade_key, 'true');
             }
             else
             {
+                self::sendWelcome();
                 self::sendReport("Upgrade");
                 self::setOption($upgrade_key, 'true');
             }
@@ -422,9 +448,12 @@ class AdWidget_ImageWidget extends WP_Widget
            <label for="<?php echo $this->get_field_id('w_new'); ?>">Open in New Window? </label>
            <input type="checkbox" name="<?php echo $this->get_field_name('w_new'); ?>" value="yes"  <?php if($instance['w_resize'] == 'yes') echo 'checked'; ?> />
        </p>
+       <p>
+           <span style="color: green; font-weight: bold;">Tip:</span> If you're using this widget, you might also find <a target="_blank" href="http://wordpress.org/plugins/selfie">Selfie</a> useful.
+       </p>
        <?php if(!Broadstreet_Adwidget_Mini_Utility::hasAdserving()): ?>
         <p>
-            <span style="color: green; font-weight: bold;">New!</span> When you're ready for a more powerful adserver with click reporting <a target="_blank" href="#" onclick="broadstreet_upgrade(); return false;">click here</a>.
+            When you're ready for a more powerful adserver with click reporting <a target="_blank" href="#" onclick="broadstreet_upgrade(); return false;">click here</a>.
             <script language="javascript">
                 if(!window.broadstreet_upgrade)
                 {
