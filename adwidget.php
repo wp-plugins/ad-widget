@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.7.1
+Version: 2.8.0
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -21,7 +21,7 @@ add_action('admin_footer', array('AdWidget_Core', 'footerScripts'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.7.1';
+    CONST VERSION = '2.8.0';
     CONST KEY_WELCOME = 'AdWidget_Welcome';
     
     /**
@@ -53,7 +53,7 @@ class AdWidget_Core
      */
     public static function getBaseURL()
     {   
-        return (get_bloginfo('url') . '/wp-content/plugins/ad-widget/');
+        return plugin_dir_url(__FILE__);
     }
     
     /**
@@ -475,7 +475,7 @@ class AdWidget_ImageWidget extends WP_Widget
            <input type="checkbox" name="<?php echo $this->get_field_name('w_new'); ?>" value="yes"  <?php if($instance['w_new'] == 'yes') echo 'checked'; ?> />
        </p>
        <p>
-           <span style="color: green; font-weight: bold;">Tip:</span> If you're using this widget, you might also find <a target="_blank" href="http://wordpress.org/plugins/selfie">Selfie</a> useful.
+           <span style="color: green; font-weight: bold;">Tip:</span> If you're using this widget, you might also find <a target="_blank" href="http://broadstreetads.com/ad-platform/ad-formats/">our special ad formats for sales people and publishers</a> useful.
        </p>
        <?php if(!Broadstreet_Adwidget_Mini_Utility::hasAdserving()): ?>
         <p>

@@ -28,7 +28,7 @@ function bsadwidget_set_option($name, $value)
 function bsadwidget_get_base_url($append = false)
 {
     $dir = basename(dirname(__FILE__));
-    return (WP_PLUGIN_URL . "/ad-widget/" . ($append ? $append : ''));
+    return (AdWidget_Core::getBaseURL() . ($append ? $append : ''));
 }
 
 function bsadwidget_get_email()
