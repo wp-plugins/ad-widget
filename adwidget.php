@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Ad Widget
 Plugin URI: https://github.com/broadstreetads/wordpress-ad-widget
 Description: The easiest way to place ads in your Wordpress sidebar. Go to Settings -> Ad Widget
-Version: 2.8.1
+Version: 2.8.2
 Author: Broadstreet Ads
 Author URI: http://broadstreetads.com
 */
@@ -21,7 +21,7 @@ add_action('admin_footer', array('AdWidget_Core', 'footerScripts'));
 class AdWidget_Core
 {
     CONST KEY_INSTALL_REPORT = 'AdWidget_Installed';
-    CONST VERSION = '2.8.1';
+    CONST VERSION = '2.8.2';
     CONST KEY_WELCOME = 'AdWidget_Welcome';
     
     /**
