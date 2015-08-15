@@ -2,8 +2,8 @@
 Contributors: Broadstreet
 Tags: wordpress,ad,widget,sidebar,google,tag,code
 Requires at least: 3.0
-Tested up to: 4.1
-Stable tag: 2.8.0
+Tested up to: 4.2
+Stable tag: 2.8.3
 
 Easily upload ad images and ad code to your sidebar. For those that don't need or
 want a complicated ad management system.
@@ -29,9 +29,23 @@ You will not find an easier way to run ads on your website!
 
 Watch a short video demo: http://www.screenr.com/u0t7
 
+== Troubleshooting ==
+
+The Ad Widget is a very simple plugin. If you are having trouble
+loading ads on your site, please make sure that:
+
+* You do not have an ad blocker installed (you would be amazed how often this happens). Disable it and refresh the page a few times to see if the ad appears.
+* You don't have CSS in your theme which is hiding images (rare, but it happens)
+
+If you have any other trouble, email kenny@broadstreetads.com - try to avoid
+the Wordpress support forums because they're awful.
+
 == Installation ==
 
-There aren't any special instructions for installing this plug-in. Once
+First: Turn off any ad blockers you might have installed. They prevent
+ads from appearing!
+
+Other than that, there aren't any special instructions for installing this plug-in. Once
 installed, go to Appearance -> Widgets, and look for the "Ad Widget" widgets!
 
 You can also go to Settings -> Ad Widget for a video demo on how to use it.
