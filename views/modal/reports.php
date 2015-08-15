@@ -1,11 +1,11 @@
 <?php
 
-$ad_id  = $_GET['ad_id'];
-$adv_id = $_GET['adv_id'];
+$ad_id  = sanitize_text_field($_GET['ad_id']);
+$adv_id = sanitize_text_field($_GET['adv_id']);
 $net_id = Broadstreet_Adwidget_Mini_Utility::getNetworkID();
 
-$start  = @$_GET['start'];
-$end    = @$_GET['end'];
+$start  = sanitize_text_field(@$_GET['start']);
+$end    = sanitize_text_field(@$_GET['end']);
 
 $day = 60 * 60 * 24 * 31;
 
